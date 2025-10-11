@@ -9,8 +9,12 @@ class PreguntadosGame:
     def __init__(self):
         self.root = tk.Tk()
         self.root.title("🎯 PREGUNTADOS - Trivia Game")
-        self.root.geometry("900x700")
+        self.root.geometry("800x600")
         self.root.configure(bg="#1a1a2e")
+        self.root.resizable(True, True)  # Permitir redimensionar
+        
+        # Centrar ventana en la pantalla
+        self.centrar_ventana()
         
         # Paleta de colores del Preguntados original
         self.colores = {
@@ -373,6 +377,15 @@ class PreguntadosGame:
         
         self.crear_pantalla_inicio()
     
+    def centrar_ventana(self):
+        """Centrar la ventana en la pantalla"""
+        self.root.update_idletasks()
+        width = self.root.winfo_width()
+        height = self.root.winfo_height()
+        x = (self.root.winfo_screenwidth() // 2) - (width // 2)
+        y = (self.root.winfo_screenheight() // 2) - (height // 2)
+        self.root.geometry(f"{width}x{height}+{x}+{y}")
+    
     def cargar_iconos(self):
         """Cargar los iconos de las categorías"""
         try:
@@ -396,10 +409,10 @@ class PreguntadosGame:
     def crear_ruleta_categorias(self, parent):
         """Crear una ruleta visual de categorías similar al Preguntados original"""
         ruleta_frame = tk.Frame(parent, bg=self.colores["fondo_principal"])
-        ruleta_frame.pack(pady=20)
+        ruleta_frame.pack(pady=15)
         
-        # Canvas para dibujar la ruleta
-        canvas = Canvas(ruleta_frame, width=200, height=200, 
+        # Canvas para dibujar la ruleta (reducido de 200x200 a 160x160)
+        canvas = Canvas(ruleta_frame, width=160, height=160, 
                        bg=self.colores["fondo_principal"], highlightthickness=0)
         canvas.pack()
         
@@ -407,9 +420,9 @@ class PreguntadosGame:
         categorias = ["IA", "Ciberseguridad", "Programacion", "Redes"]
         colores_ruleta = [self.colores[cat] for cat in categorias]
         
-        # Dibujar sectores de la ruleta
-        centro_x, centro_y = 100, 100
-        radio = 80
+        # Dibujar sectores de la ruleta (radio reducido)
+        centro_x, centro_y = 80, 80
+        radio = 65
         
         for i, (categoria, color) in enumerate(zip(categorias, colores_ruleta)):
             # Calcular ángulos para cada sector (90 grados cada uno)
@@ -450,25 +463,25 @@ class PreguntadosGame:
         
         # Frame principal con gradiente simulado
         frame_principal = tk.Frame(self.root, bg=self.colores["fondo_principal"])
-        frame_principal.pack(expand=True, fill="both", padx=20, pady=20)
+        frame_principal.pack(expand=True, fill="both", padx=15, pady=15)
         
         # Header con título principal
         header_frame = tk.Frame(frame_principal, bg=self.colores["fondo_secundario"], relief="ridge", bd=3)
-        header_frame.pack(fill="x", pady=(0, 30))
+        header_frame.pack(fill="x", pady=(0, 20))
         
         # Título principal con estilo más llamativo
         titulo = tk.Label(header_frame, text="🎯 PREGUNTADOS", 
-                         font=("Arial Black", 36, "bold"), 
+                         font=("Arial Black", 28, "bold"), 
                          fg=self.colores["texto_secundario"], 
                          bg=self.colores["fondo_secundario"])
-        titulo.pack(pady=15)
+        titulo.pack(pady=10)
         
         # Subtítulo
         subtitulo = tk.Label(header_frame, text="TRIVIA TECNOLÓGICA", 
-                           font=("Arial", 16, "bold"), 
+                           font=("Arial", 14, "bold"), 
                            fg=self.colores["azul_claro"], 
                            bg=self.colores["fondo_secundario"])
-        subtitulo.pack(pady=(0, 15))
+        subtitulo.pack(pady=(0, 10))
         
         # Frame central para contenido
         contenido_frame = tk.Frame(frame_principal, bg=self.colores["fondo_principal"])
@@ -479,17 +492,17 @@ class PreguntadosGame:
         
         # Frame para información de categorías
         info_frame = tk.Frame(contenido_frame, bg=self.colores["fondo_tarjeta"], relief="ridge", bd=2)
-        info_frame.pack(fill="x", pady=20, padx=40)
+        info_frame.pack(fill="x", pady=15, padx=30)
         
         # Título de categorías
         tk.Label(info_frame, text="🎮 CATEGORÍAS DE JUEGO", 
-                font=("Arial", 14, "bold"), 
+                font=("Arial", 12, "bold"), 
                 fg=self.colores["amarillo_insignia"], 
-                bg=self.colores["fondo_tarjeta"]).pack(pady=10)
+                bg=self.colores["fondo_tarjeta"]).pack(pady=8)
         
         # Grid de categorías con colores
         categorias_grid = tk.Frame(info_frame, bg=self.colores["fondo_tarjeta"])
-        categorias_grid.pack(pady=10)
+        categorias_grid.pack(pady=8)
         
         categorias_info = [
             ("🤖 Inteligencia Artificial", self.colores["IA"]),
@@ -500,10 +513,10 @@ class PreguntadosGame:
         
         for i, (texto, color) in enumerate(categorias_info):
             categoria_label = tk.Label(categorias_grid, text=texto, 
-                                     font=("Arial", 12, "bold"), 
+                                     font=("Arial", 10, "bold"), 
                                      fg="white", bg=color,
-                                     padx=15, pady=8, relief="raised", bd=2)
-            categoria_label.grid(row=i//2, column=i%2, padx=10, pady=5, sticky="ew")
+                                     padx=12, pady=6, relief="raised", bd=2)
+            categoria_label.grid(row=i//2, column=i%2, padx=8, pady=4, sticky="ew")
         
         # Configurar columnas del grid
         categorias_grid.grid_columnconfigure(0, weight=1)
@@ -512,36 +525,36 @@ class PreguntadosGame:
         # Instrucciones
         instrucciones = tk.Label(info_frame, 
                                text="¡Responde 3 preguntas correctas por categoría para ganar una insignia!", 
-                               font=("Arial", 11, "italic"), 
+                               font=("Arial", 10, "italic"), 
                                fg=self.colores["verde_correcto"], 
                                bg=self.colores["fondo_tarjeta"])
-        instrucciones.pack(pady=(10, 15))
+        instrucciones.pack(pady=(8, 12))
         
         # Frame para botones de juego
         botones_frame = tk.Frame(contenido_frame, bg=self.colores["fondo_principal"])
-        botones_frame.pack(pady=30)
+        botones_frame.pack(pady=20)
         
         # Botón Single Player
         btn_single = tk.Button(botones_frame, text="🎮 MODO SINGLE PLAYER", 
-                              font=("Arial", 14, "bold"),
+                              font=("Arial", 12, "bold"),
                               bg=self.colores["boton_principal"], 
                               fg="white", 
-                              padx=40, pady=15,
+                              padx=30, pady=12,
                               relief="raised", bd=3,
                               activebackground=self.colores["texto_secundario"],
                               command=lambda: self.iniciar_juego("single"))
-        btn_single.pack(pady=10)
+        btn_single.pack(pady=8)
         
         # Botón Multiplayer
         btn_multi = tk.Button(botones_frame, text="👥 MODO MULTIPLAYER", 
-                             font=("Arial", 14, "bold"),
+                             font=("Arial", 12, "bold"),
                              bg=self.colores["azul_claro"], 
                              fg="white", 
-                             padx=40, pady=15,
+                             padx=30, pady=12,
                              relief="raised", bd=3,
                              activebackground="#5a9fd1",
                              command=lambda: self.iniciar_juego("multiplayer"))
-        btn_multi.pack(pady=10)
+        btn_multi.pack(pady=8)
     
     def iniciar_juego(self, modo):
         """Inicializar el juego según el modo seleccionado"""
@@ -565,7 +578,7 @@ class PreguntadosGame:
         
         # Frame principal con nuevos colores
         self.frame_juego = tk.Frame(self.root, bg=self.colores["fondo_principal"])
-        self.frame_juego.pack(expand=True, fill="both", padx=20, pady=20)
+        self.frame_juego.pack(expand=True, fill="both", padx=15, pady=15)
         
         # Header con información del juego
         self.crear_header()
@@ -573,15 +586,15 @@ class PreguntadosGame:
         # Frame para la pregunta con diseño mejorado
         self.frame_pregunta = tk.Frame(self.frame_juego, bg=self.colores["fondo_tarjeta"], 
                                      relief="raised", bd=3)
-        self.frame_pregunta.pack(fill="x", pady=20)
+        self.frame_pregunta.pack(fill="x", pady=15)
         
         # Frame para las opciones con nuevo estilo
         self.frame_opciones = tk.Frame(self.frame_juego, bg=self.colores["fondo_principal"])
-        self.frame_opciones.pack(fill="x", pady=20)
+        self.frame_opciones.pack(fill="x", pady=15)
         
         # Frame para botones de control
         self.frame_controles = tk.Frame(self.frame_juego, bg=self.colores["fondo_principal"])
-        self.frame_controles.pack(fill="x", pady=20)
+        self.frame_controles.pack(fill="x", pady=15)
         
         # Seleccionar primera pregunta
         self.seleccionar_nueva_pregunta()
